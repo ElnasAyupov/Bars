@@ -1,0 +1,81 @@
+﻿@model IEnumerable<LibraryBars.Models.Book>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Список книг</h2>
+
+@if (User.IsInRole("Librarian"))
+{
+    <p>
+        @Html.ActionLink("Создать", "Create")
+    </p>
+}
+
+@using (Html.BeginForm())
+{ <p> Поиск: @Html.TextBox("Search") <input type="submit" value="Найти" /></p> }
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Name)*@
+            @Html.ActionLink("Имя", "Index", new { sort = ViewBag.NameSort })
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Year)*@
+            @Html.ActionLink("Год", "Index", new { sort = ViewBag.YearSort})
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Creator)*@
+            @Html.ActionLink("Автор", "Index", new { sort = ViewBag.CreatorSort })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Genre)
+        </th>
+        @if (User.IsInRole("Librarian"))
+        {
+            <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+        }
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creator)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Genre)
+        </td>
+        @if (User.IsInRole("Librarian"))
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+        }
+        <td>
+            @if (User.IsInRole("Librarian"))
+            {
+                @Html.ActionLink("Изменить ", "Edit", new { id = item.BookId }) 
+                @Html.ActionLink("Удалить", "Delete", new { id = item.BookId })
+            }
+            |   
+            @Html.ActionLink("Подробнее", "Details", new { id=item.BookId })
+            @if (User.IsInRole("Customer"))
+            {
+                @Html.ActionLink("Взять книгу", "TakeBook", new { id = item.BookId})
+            }
+        </td>
+    </tr>
+}
+
+</table>
