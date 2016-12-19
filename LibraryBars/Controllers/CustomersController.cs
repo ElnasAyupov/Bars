@@ -23,7 +23,7 @@ namespace LibraryBars.Controllers
         }
         public ActionResult Timeovered()
         {
-            var Orders = db.Orders.Where(t => t.Status == Constants.Statuses.InProgress).GroupBy(t => t.CustomerId);
+            var Orders = db.Orders.Where(t => t.Status == Constants.Statuses.InProgress && t.DateTo<DateTime.Now).GroupBy(t => t.CustomerId);
             List<Customer> customers = new List<Customer>();
             foreach (var a in Orders)
             {

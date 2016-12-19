@@ -68,7 +68,7 @@ namespace LibraryBars.Controllers
             //    BookId = k.Key,
             //    Count = k.Count()
             //}).ToList();
-            var TakenBooksId = db.Orders.Distinct();
+            var TakenBooksId = db.Orders.Where(t => t.Status == Statuses.InProgress);
             List<Book> books = new List<Book>();
             foreach (var a in TakenBooksId)
             {
@@ -128,7 +128,7 @@ namespace LibraryBars.Controllers
             var QueryOrderResult = db.Orders.Where(t => t.BookId == id && t.CustomerId == CurrentUserId && t.Status == Statuses.InProgress).FirstOrDefault();
 
             db.Books.Find(id).Count += 1;
-            db.Orders.Find(QueryOrderResult).Status = Statuses.Returned;
+            db.Orders.Find(QueryOrderResult.OrderId).Status = Statuses.Returned;
             db.SaveChanges();
 
             return Redirect("/Books/UserBooks");
@@ -148,7 +148,12 @@ namespace LibraryBars.Controllers
 
             var UserId = User.Identity.GetUserId();
             var Result = db.Customers.Where(t => t.SecCode == UserId).FirstOrDefault();
-            if (db.Orders.Where(t=> t.BookId == id && t.CustomerId == Result.CustomerId).FirstOrDefault()==null)
+            if (Result == null)
+            {
+                return Redirect("/Customers/Create");
+            }
+            var Check = db.Orders.Where(t => t.BookId == id && t.CustomerId == Result.CustomerId && t.Status == Statuses.InProgress).FirstOrDefault();
+            if (Check!=null)
             {
                 return Redirect("/Books/UserBooks");
             }

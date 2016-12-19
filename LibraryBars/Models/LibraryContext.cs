@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using LibraryBars.Constants;
 
 namespace LibraryBars.Models
 {
@@ -13,6 +14,10 @@ namespace LibraryBars.Models
     {
         protected override void Seed(LibraryContext context)
         {
+            context.Books.Add(new Book {Name = "Война и мир", Year = "1880", Creator = "Толстой", Genre = Genres.Romance, Count = 3 });
+            context.Books.Add(new Book { Name = "Моби дик", Year = "1700", Creator = "Неизвестный", Genre = Genres.Fantasy, Count = 5 });
+            context.Books.Add(new Book { Name = "Книжка", Year = "1932", Creator = "Писатель", Genre = Genres.Autobiography, Count = 0 });
+
             base.Seed(context);
         }
     }
